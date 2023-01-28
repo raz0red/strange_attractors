@@ -76,7 +76,11 @@ public:
 		lastX = xpos;
 		lastY = ypos;
 
+#ifndef __EMSCRIPTEN__
 		float sensitivity = 0.15f;
+#else
+		float sensitivity = 0.55f;
+#endif
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
 
@@ -124,7 +128,13 @@ public:
 							0, 0, 0,
 							0, 1, roll);
 #else
-		glRotatef(45, camPos[0], camPos[1], camPos[2]);
+		float rot_y = atan2(-camPos[0], camPos[2]);
+		float len_xz = hypot(-camPos[0], -camPos[2]);
+		float rot_x = atan2(-camPos[1], len_xz);
+		const float PI = 3.14159;
+		glRotatef((rot_x > 0 ? rot_x : (2*PI + rot_x)) * 360 / (2*PI), -1, 0, 0);
+		glRotatef((rot_y > 0 ? rot_y : (2*PI + rot_y)) * 360 / (2*PI), 0, 1, roll);
+		glTranslatef(-camPos[0], -camPos[1], -camPos[2]);
 #endif
 	};
 };

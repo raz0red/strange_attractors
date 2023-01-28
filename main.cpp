@@ -80,7 +80,7 @@ int main(int argc, const char *argv[])
   }
 
 #ifdef __EMSCRIPTEN__
-  window = glfwCreateWindow(640, 480, "Strange Attractors", NULL, NULL);
+  window = glfwCreateWindow(720, 720, "Strange Attractors", NULL, NULL);
 #else
   window = glfwCreateWindow(1440, 1440, "Strange Attractors", NULL, NULL);
 #endif
