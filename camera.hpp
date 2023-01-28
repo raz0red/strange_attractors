@@ -119,6 +119,12 @@ public:
 		}
 		updateCamPos();
 	};
+#ifdef __EMSCRIPTEN__
+	#define PI 3.14159
+	float rotation(float in) {
+		return (in > 0 ? in : (2*PI + in)) * 360 / (2*PI);
+	}
+#endif
 	void updatePosition()
 	{
 		glMatrixMode(GL_MODELVIEW);
@@ -128,12 +134,11 @@ public:
 							0, 0, 0,
 							0, 1, roll);
 #else
-		float rot_y = atan2(-camPos[0], camPos[2]);
+		float rot_y = rotation(atan2(-camPos[0], camPos[2]));
 		float len_xz = hypot(-camPos[0], -camPos[2]);
-		float rot_x = atan2(-camPos[1], len_xz);
-		const float PI = 3.14159;
-		glRotatef((rot_x > 0 ? rot_x : (2*PI + rot_x)) * 360 / (2*PI), -1, 0, 0);
-		glRotatef((rot_y > 0 ? rot_y : (2*PI + rot_y)) * 360 / (2*PI), 0, 1, roll);
+		float rot_x = rotation(atan2(-camPos[1], len_xz));
+		glRotatef(rot_x, -1, 0, 0);
+		glRotatef(rot_y, 0, 1, roll);
 		glTranslatef(-camPos[0], -camPos[1], -camPos[2]);
 #endif
 	};
