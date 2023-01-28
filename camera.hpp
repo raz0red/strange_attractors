@@ -76,7 +76,7 @@ public:
 		lastX = xpos;
 		lastY = ypos;
 
-		float sensitivity = 0.15f;
+		float sensitivity = 0.5f;
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
 
@@ -91,6 +91,7 @@ public:
 
 		updateCamPos();
 	};
+
 	void trackKeys(int key, int scancode, int action, int mods)
 	{
 		switch (key)
@@ -118,9 +119,13 @@ public:
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+#ifndef __EMSCRIPTEN__
 		gluLookAt(camPos[0], camPos[1], camPos[2],
 							0, 0, 0,
 							0, 1, roll);
+#else
+		glRotatef(45, camPos[0], camPos[1], camPos[2]);
+#endif
 	};
 };
 // end class Camera

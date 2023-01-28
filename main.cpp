@@ -1,5 +1,8 @@
 #include "camera.hpp"
 #include "points.hpp"
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 GLFWwindow *window;
 Camera camera = Camera();
@@ -53,10 +56,22 @@ void genParticles()
   }
 }
 
+static ParticleSystem particleSystem;
+
+static void main_loop() {
+  glClearColor(0.208, 0.231, 0.09, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  camera.updatePosition();
+
+  particleSystem.Tick();
+
+  glfwSwapBuffers(window);
+  glfwPollEvents();
+}
+
 int main(int argc, const char *argv[])
 {
-  ParticleSystem particleSystem;
-
   if (!glfwInit())
   {
     fprintf(stderr, "Failed to initialize GLFW\n");
@@ -64,7 +79,12 @@ int main(int argc, const char *argv[])
     return -1;
   }
 
+#ifdef __EMSCRIPTEN__
+  window = glfwCreateWindow(640, 480, "Strange Attractors", NULL, NULL);
+#else
   window = glfwCreateWindow(1440, 1440, "Strange Attractors", NULL, NULL);
+#endif
+
   if (window == NULL)
   {
     fprintf(stderr, "Failed to create GLFW window\n");
@@ -93,19 +113,15 @@ int main(int argc, const char *argv[])
   glfwSetCursorPosCallback(window, cursorCallback);
   genParticles();
 
-  while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0)
-  {
-    glClearColor(0.208, 0.231, 0.09, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    camera.updatePosition();
-
-    particleSystem.Tick();
-
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+#ifdef __EMSCRIPTEN__
+    // 0 fps means to use requestAnimationFrame; non-0 means to use setTimeout.
+  emscripten_set_main_loop(main_loop, 0, 1);
+#else
+  while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+         glfwWindowShouldClose(window) == 0) {
+      main_loop();
   }
-
+#endif
   glfwTerminate();
   return 0;
 }

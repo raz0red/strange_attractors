@@ -118,7 +118,11 @@ public:
   void draw()
   {
     glColor3f(color.r, color.g, color.b);
-    glPointSize(20.0f);
+#ifdef __EMSCRIPTEN__
+		glPointSize(5.0f);
+#else
+ 		glPointSize(20.0f);
+#endif
     glBegin(GL_POINTS);
     glVertex3f(position.x, position.y, position.z);
     glEnd();
@@ -151,7 +155,9 @@ private:
   {
     for (Particle *particle : Particle::getInstances())
     {
+#ifndef __EMSCRIPTEN__
       std::cout << particle->getPosition().x << std::endl;
+#endif
       Coordinate3f currPos = particle->getPosition();
       Coordinate3f newPos = thomas(currPos);
       particle->update(newPos);
