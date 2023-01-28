@@ -76,7 +76,7 @@ public:
 		lastX = xpos;
 		lastY = ypos;
 
-		float sensitivity = 0.5f;
+		float sensitivity = 0.15f;
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
 
