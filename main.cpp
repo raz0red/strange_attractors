@@ -58,7 +58,7 @@ void genParticles()
 
 static ParticleSystem particleSystem;
 
-static void main_loop() {
+extern "C" void main_loop() {
   glClearColor(0.208, 0.231, 0.09, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -68,6 +68,13 @@ static void main_loop() {
 
   glfwSwapBuffers(window);
   glfwPollEvents();
+}
+
+extern "C" void setWindowSize(int w, int h) {
+  printf("%d, %d\n", w, h);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glfwSetWindowSize(window, w, h);
+  glViewport(0, 0, w, h);
 }
 
 int main(int argc, const char *argv[])
@@ -80,7 +87,7 @@ int main(int argc, const char *argv[])
   }
 
 #ifdef __EMSCRIPTEN__
-  window = glfwCreateWindow(720, 720, "Strange Attractors", NULL, NULL);
+  window = glfwCreateWindow(1280, 969, "Strange Attractors", NULL, NULL);
 #else
   window = glfwCreateWindow(1440, 1440, "Strange Attractors", NULL, NULL);
 #endif
@@ -115,14 +122,14 @@ int main(int argc, const char *argv[])
 
 #ifdef __EMSCRIPTEN__
     // 0 fps means to use requestAnimationFrame; non-0 means to use setTimeout.
-  emscripten_set_main_loop(main_loop, 0, 1);
+  //emscripten_set_main_loop(main_loop, 0, 1);
 #else
   while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
          glfwWindowShouldClose(window) == 0) {
       main_loop();
   }
-#endif
   glfwTerminate();
+#endif
   return 0;
 }
 
