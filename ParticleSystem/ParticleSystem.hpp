@@ -17,7 +17,6 @@ private:
 		{
 			Coordinate3f currPos = particle->getPosition();
 			Coordinate3f newPos = attractor.updateCoordinate(currPos);
-			std::cout << "x: " << newPos.x << ", y: " << newPos.y << ", z: " << newPos.z << std::endl;
 			particle->update(newPos);
 			particle->draw();
 		}

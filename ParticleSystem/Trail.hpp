@@ -2,7 +2,11 @@
 #define Trail_hpp
 
 const int PARTICLE_TRAIL_LENGTH = 40;
+#ifdef __EMSCRIPTEN__
+const int MAX_TRAIL_WIDTH = 1.0f;
+#else
 const int MAX_TRAIL_WIDTH = 8;
+#endif
 const int MAX_TRAIL_OPACITY = 50;
 const float TRAIL_OPACITY_FADE_DISTANCE = 0.3; // 0.0 - 1.0
 const float TRAIL_WIDTH_FADE_DISTANCE = 0.8;	 // 0.0 - 1.0

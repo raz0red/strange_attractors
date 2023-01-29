@@ -1,7 +1,11 @@
 #ifndef Particle_hpp
 #define Particle_hpp
 
+#ifdef __EMSCRIPTEN__
+const float PARTICLE_SIZE = 5.0f;
+#else
 const float PARTICLE_SIZE = 10.0f;
+#endif
 
 using namespace cmn;
 

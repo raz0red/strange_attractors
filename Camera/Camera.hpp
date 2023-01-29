@@ -63,7 +63,11 @@ public:
 		lastX = xpos;
 		lastY = ypos;
 
+#ifndef __EMSCRIPTEN__
 		float sensitivity = 0.15f;
+#else
+		float sensitivity = 0.55f;
+#endif
 		xoffset *= sensitivity;
 		yoffset *= sensitivity;
 
@@ -101,13 +105,32 @@ public:
 		}
 		updateCamPos();
 	};
+
+#ifdef __EMSCRIPTEN__
+#define PI 3.14159
+	float rotation(float in)
+	{
+		return (in > 0 ? in : (2 * PI + in)) * 360 / (2 * PI);
+	}
+#endif
+
 	void updatePosition()
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+
+#ifndef __EMSCRIPTEN__
 		gluLookAt(camPos.x, camPos.y, camPos.z,
 							0, 0, 0,
 							0, 1, roll);
+#else
+		float rot_y = rotation(atan2(-camPos.x, camPos.z));
+		float len_xz = hypot(-camPos.x, -camPos.z);
+		float rot_x = rotation(atan2(-camPos.x, len_xz));
+		glRotatef(rot_x, -1, 0, 0);
+		glRotatef(rot_y, 0, 1, roll);
+		glTranslatef(-camPos.x, -camPos.y, -camPos.z);
+#endif
 	};
 };
 // end class Camera
