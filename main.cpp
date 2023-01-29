@@ -22,6 +22,10 @@ void cursorCallback(GLFWwindow *window, double xpos, double ypos)
   camera.trackCursor(xpos, ypos);
 };
 
+extern "C" void trackCursor(int x, int y) {
+  camera.trackCursor(x, y);
+}
+
 std::set<Particle *> Particle::instances;
 Coordinate3f initialPoints[20] = {
     {.x = 2.09f, .y = 2.1f, .z = -0.01f},
