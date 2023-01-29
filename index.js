@@ -30,10 +30,18 @@ const start = async () => {
   module.canvas = screen;
   module._main();
 
-  addEventListener("resize", () => {
+  const forceResize = () => {
     const rect = screen.getBoundingClientRect();
     console.log(rect.width + ", " + rect.height)
     module._setWindowSize(rect.width | 0, rect.height | 0);
+  }
+
+  addEventListener("resize", () => {
+    forceResize();
+  });
+
+  addEventListener("orientationchange", () => {
+    forceResize();
   });
 
   screen.addEventListener('touchmove', (ev) => {
