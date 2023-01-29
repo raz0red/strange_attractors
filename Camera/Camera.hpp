@@ -1,20 +1,7 @@
-#ifndef camera_hpp
-#define camera_hpp
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-#include <set>
-#include <cmath>
-// Include GLEW
-#include <GL/glew.h>
+#ifndef Camera_hpp
+#define Camera_hpp
 
-// Include GLFW
-#include <GLFW/glfw3.h>
-
-float degToRad(float degrees)
-{
-	return degrees * (M_PI / 180);
-}
+using namespace cmn;
 
 class Camera
 {
@@ -32,14 +19,16 @@ private:
 	// the z axis rotation of the camera
 	float roll;
 	// the cam position vector
-	float camPos[3];
+	Coordinate3f camPos;
 
 	void updateCamPos()
 	{
-		camPos[0] = cos(degToRad(yaw)) * cos(degToRad(pitch));
-		camPos[1] = sin(degToRad(pitch));
-		camPos[2] = sin(degToRad(yaw)) * cos(degToRad(pitch));
-	}
+		Coordinate3f newPos = {
+				.x = cos(degToRad(yaw)) * cos(degToRad(pitch)),
+				.y = sin(degToRad(pitch)),
+				.z = sin(degToRad(yaw)) * cos(degToRad(pitch))};
+		camPos = newPos;
+	};
 
 public:
 	Camera()
@@ -50,9 +39,7 @@ public:
 		pitch = 0.2;
 		yaw = 0.2;
 		roll = 0.0;
-		camPos[0] = cos(degToRad(yaw)) * cos(degToRad(pitch));
-		camPos[1] = sin(degToRad(pitch));
-		camPos[2] = sin(degToRad(yaw)) * cos(degToRad(pitch));
+		updateCamPos();
 	};
 	~Camera(){}; // deconstructor
 	void ortho()
@@ -60,7 +47,7 @@ public:
 		// set up the projection matrix
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(-5, 5, -5, 5, 10, -10);
+		glOrtho(-10, 10, -10, 10, 200, -200);
 	};
 	void trackCursor(double xpos, double ypos)
 	{
@@ -118,7 +105,7 @@ public:
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		gluLookAt(camPos[0], camPos[1], camPos[2],
+		gluLookAt(camPos.x, camPos.y, camPos.z,
 							0, 0, 0,
 							0, 1, roll);
 	};

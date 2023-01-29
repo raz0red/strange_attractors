@@ -13,7 +13,8 @@
       "cwd": "${fileDirname}",
       "environment": [],
       "MIMode": "lldb",
-      "preLaunchTask": "C/C++: g++ build main file"
+      "preLaunchTask": "C/C++: g++ build main file",
+      "externalConsole": false
     }
   ]
 }
