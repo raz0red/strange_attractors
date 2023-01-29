@@ -32,7 +32,7 @@ using namespace cmn;
 GLFWwindow *window;
 Camera camera = Camera();
 std::set<Particle *> Particle::instances;
-static ParticleSystem<Attractors::Thomas> particleSystem;
+static ParticleSystem<Attractors::Halvorsen> particleSystem;
 
 static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -43,6 +43,11 @@ static void cursorCallback(GLFWwindow *window, double xpos, double ypos)
 {
 	camera.trackCursor(xpos, ypos);
 };
+
+extern "C" void trackCursor(int x, int y)
+{
+	camera.trackCursor(x, y);
+}
 
 std::vector<Particle> particles;
 static void genParticles()

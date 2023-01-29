@@ -30,11 +30,38 @@ const start = async () => {
   module.canvas = screen;
   module._main();
 
-  addEventListener('resize', () => {
+  const forceResize = () => {
     const rect = screen.getBoundingClientRect();
     console.log(rect.width + ', ' + rect.height);
     module._setWindowSize(rect.width | 0, rect.height | 0);
+  };
+
+  addEventListener('resize', () => {
+    forceResize();
   });
+
+  addEventListener('orientationchange', () => {
+    forceResize();
+  });
+
+  screen.addEventListener(
+    'touchmove',
+    (ev) => {
+      ev.preventDefault();
+      for (let i = 0; i < ev.targetTouches.length; i++) {
+        const rect = ev.target.getBoundingClientRect();
+        let offsetX = ev.touches[0].clientX - window.pageXOffset - rect.left;
+        let offsetY = ev.touches[0].clientY - window.pageYOffset - rect.top;
+        if (offsetX < 0) offsetX = 0;
+        if (offsetX > rect.width) offsetX = rect.width;
+        if (offsetY < 0) offsetY = 0;
+        if (offsetY > rect.height) offsetY = rect.height;
+        //console.log(offsetX, offsetY);
+        module._trackCursor(offsetX, offsetY);
+      }
+    },
+    false
+  );
 
   const FPS = 1000 / 60;
 
